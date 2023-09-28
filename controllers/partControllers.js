@@ -4,10 +4,21 @@ const ErrorResponse = require("../utils/errorResponse");
 
 exports.getAllParts = asyncHandler(async (req, res, next) => {
   let query;
+  let UIValues = {
+    filtering: {},
+    sorting: {},
+  };
   const reqQuery = { ...req.query };
 
   const removeFields = ["sort"];
   removeFields.forEach((val) => delete reqQuery[val]);
+
+  const filterKeys = Object.keys(reqQuery);
+  const filterValues = Object.values(reqQuery);
+
+  filterKeys.forEach(
+    (val, index) => (UIValues.filtering[val] = filterValues[index]),
+  );
 
   let queryString = JSON.stringify(reqQuery);
   queryString = queryString.replace(
