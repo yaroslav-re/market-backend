@@ -37,7 +37,7 @@ exports.getAllParts = asyncHandler(async (req, res, next) => {
   }
 
   const parts = await query;
-  res.status(200).json({ success: true, data: parts });
+  res.status(200).json({ success: true, data: parts, UIValues });
 });
 
 exports.createNewPart = asyncHandler(async (req, res, next) => {
