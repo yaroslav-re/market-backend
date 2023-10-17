@@ -17,23 +17,35 @@ exports.getAllParts = asyncHandler(async (req, res, next) => {
   const filterValues = Object.values(reqQuery);
 
   filterKeys.forEach(
-    (val, index) => (UIValues.filtering[val] = filterValues[index])
+    (val, index) => (UIValues.filtering[val] = filterValues[index]),
   );
 
   let queryString = JSON.stringify(reqQuery);
   queryString = queryString.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`
+    (match) => `$${match}`,
   );
 
   query = Part.find(JSON.parse(queryString));
 
   if (req.query.sort) {
     const sortByArray = req.query.sort.split(",");
+
+    sortByArray.forEach((val) => {
+      let order;
+      if (val[0] === "-") {
+        order = "descending";
+      } else {
+        order = "ascending";
+      }
+
+      UIValues.sorting[val.replace("-", "")] = order;
+    });
+
     const sortByString = sortByArray.join(" ");
     query = query.sort(sortByString);
   } else {
-    query = query.sort("price");
+    query = query.sort("-price");
   }
 
   const parts = await query;
@@ -63,7 +75,7 @@ exports.updatePartById = asyncHandler(async (req, res, next) => {
   let part = await Part.findById(req.params.id);
   if (!part) {
     return next(
-      new ErrorResponse(`part with id: ${req.params.id} wasn't found`, 404)
+      new ErrorResponse(`part with id: ${req.params.id} wasn't found`, 404),
     );
   }
   part = await Part.findByIdAndUpdate(req.params.id, req.body, {
@@ -77,7 +89,7 @@ exports.deletePartById = asyncHandler(async (req, res, next) => {
   let part = await Part.findById(req.params.id);
   if (!part) {
     return next(
-      new ErrorResponse(`part with id: ${req.params.id} wasn't found`, 404)
+      new ErrorResponse(`part with id: ${req.params.id} wasn't found`, 404),
     );
   }
   await Part.findByIdAndDelete(req.params.id);
