@@ -1,5 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandler");
-const Part = require("../models/Part");
+const Part = require("../models/PartSchema");
 const ErrorResponse = require("../utils/errorResponse");
 
 exports.getAllParts = asyncHandler(async (req, res, next) => {

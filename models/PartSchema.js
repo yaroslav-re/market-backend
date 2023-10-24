@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const partSchema = new mongoose.Schema({
+const PartSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "please provide name of the part"],
@@ -20,6 +20,6 @@ const partSchema = new mongoose.Schema({
   },
 });
 
-const Part = mongoose.model("Part", partSchema);
+const Part = mongoose.model("Part", PartSchema);
 
 module.exports = Part;

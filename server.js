@@ -16,6 +16,7 @@ app.use(express.json());
 
 // routes
 app.use("/api/parts", require("./routes/partRoutes"));
+app.use("/api/register", require("./routes/loginRoutes"))
 
 // errorHandler
 app.use(errorHandler);
