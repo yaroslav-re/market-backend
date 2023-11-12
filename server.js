@@ -1,6 +1,12 @@
 require("dotenv").config();
 const cors = require("cors");
 
+const session = require("express-session");
+
+const MongoDBStore = require("connect-mongodb-session")(session);
+
+const config = require("config");
+
 const express = require("express");
 
 const connectDB = require("./config/db");
@@ -14,9 +20,21 @@ app.use(cors());
 // middleware
 app.use(express.json());
 
+const mongoDBStore = new MongoDBStore({ uri: process.env.MONGO_URI, collection: "mySessions" });
+app.use(
+  session({
+    secret: "secret",
+    name: "sessionID",
+    store: mongoDBStore,
+    resave: true,
+    saveUninitialized: false,
+  }),
+);
+
 // routes
 app.use("/api/parts", require("./routes/partRoutes"));
-app.use("/api/register", require("./routes/loginRoutes"))
+app.use("/api/register", require("./routes/registerRoutes"));
+app.use("/api/login", require("./routes/loginRoutes"));
 
 // errorHandler
 app.use(errorHandler);
@@ -26,3 +44,5 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server running on port: ${PORT}`);
 });
+
+// дз подключить login и register к frontend
