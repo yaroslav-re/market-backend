@@ -20,7 +20,10 @@ app.use(cors());
 // middleware
 app.use(express.json());
 
-const mongoDBStore = new MongoDBStore({ uri: process.env.MONGO_URI, collection: "mySessions" });
+const mongoDBStore = new MongoDBStore({
+  uri: process.env.MONGO_URI,
+  collection: "mySessions",
+});
 app.use(
   session({
     secret: "secret",
@@ -35,6 +38,8 @@ app.use(
 app.use("/api/parts", require("./routes/partRoutes"));
 app.use("/api/register", require("./routes/registerRoutes"));
 app.use("/api/login", require("./routes/loginRoutes"));
+app.use("/api/logout", require("./routes/loginRoutes"));
+app.use("/api/isauth", require("./routes/loginRoutes"));
 
 // errorHandler
 app.use(errorHandler);
@@ -44,5 +49,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server running on port: ${PORT}`);
 });
-
-// дз подключить login и register к frontend

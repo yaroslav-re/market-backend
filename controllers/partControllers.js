@@ -7,6 +7,7 @@ exports.getAllParts = asyncHandler(async (req, res, next) => {
   let UIValues = {
     filtering: {},
     sorting: {},
+    currentPartId: "",
   };
   const reqQuery = { ...req.query };
 
@@ -94,4 +95,14 @@ exports.deletePartById = asyncHandler(async (req, res, next) => {
   }
   await Part.findByIdAndDelete(req.params.id);
   res.status(200).json({ success: true, data: {} });
+});
+
+exports.getPartById = asyncHandler(async (req, res, next) => {
+  let part = await Part.findById(req.params.id);
+  if (!part) {
+    return next(
+      new ErrorResponse(`part with id: ${req.params.id} wasn't found`, 404),
+    );
+  }
+  res.status(200).json({ success: true, data: part });
 });

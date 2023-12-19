@@ -34,22 +34,42 @@ exports.createNewUser = asyncHandler(async (req, res, next) => {
 exports.logIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({message: "login or password missing"})
+    return res.status(400).json({ message: "login or password missing" });
   }
 
-  const user = await User.findOne({email})
+  const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({message: "user is not found"})
+    return res.status(404).json({ message: "user is not found" });
   }
 
-  const matchPassword = await bcrypt.compare(password, user.password)
+  const matchPassword = await bcrypt.compare(password, user.password);
 
   if (matchPassword) {
-    const userSession = {email: user.email}
-    req.session.user = userSession
+    const userSession = { email: user.email };
+    req.session.user = userSession;
 
-    return res.status(200).json({message: "you have logged in successfully", userSession})
+    return res
+      .status(200)
+      .json({ message: "you have logged in successfully", userSession });
   } else {
-    res.status(401).json({message: "invalid credentials"})
+    res.status(401).json({ message: "invalid credentials" });
+  }
+});
+
+exports.logOut = asyncHandler(async (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) {
+      throw error;
+    }
+    res.clearCookie("session-id");
+    res.status(200).send("logged out successfully");
+  });
+});
+
+exports.isAuth = asyncHandler(async (req, res, next) => {
+  if (req.session.user) {
+    return res.json(req.session.user);
+  } else {
+    res.status(401).json("unauthorized");
   }
 });

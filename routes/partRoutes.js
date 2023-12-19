@@ -13,6 +13,7 @@ router
 router
   .route("/:id")
   .put(partControllers.updatePartById)
-  .delete(partControllers.deletePartById);
+  .delete(partControllers.deletePartById)
+  .get(partControllers.getPartById);
 
 module.exports = router;

@@ -18,6 +18,9 @@ const PartSchema = new mongoose.Schema({
     type: Number,
     required: [true, "please provide price of the part"],
   },
+  img: {
+    type: String,
+  },
 });
 
 const Part = mongoose.model("Part", PartSchema);
